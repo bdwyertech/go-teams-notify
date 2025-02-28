@@ -617,6 +617,9 @@ type Element struct {
 
 	// StartLineNumber specifies the initial line number of CodeBlock element, specific to MSTeams.
 	StartLineNumber int `json:"startLineNumber,omitempty"`
+
+	// Specifies a background image. Acceptable formats are PNG, JPEG, and GIF
+	BackgroundImage *BackgroundImage `json:"backgroundImage,omitempty"`
 }
 
 // Container is an Element type that allows grouping items together.
@@ -836,6 +839,30 @@ type Action struct {
 	// https://docs.microsoft.com/en-us/adaptive-cards/authoring-cards/input-validation
 	TargetElements []TargetElement `json:"targetElements,omitempty"`
 }
+
+// BackgroundImage specifies a background image. Acceptable formats are PNG, JPEG, and GIF.
+// Introduced in version 1.2
+type BackgroundImage struct {
+	// URL is the URL (or data URL) of the image. Acceptable formats are PNG, JPEG, and GIF.
+	URL string `json:"url,omitempty"`
+
+	// FillMode describes how the image should fill the area.
+	FillMode string `json:"fillMode,omitempty"`
+
+	// HorizontalAlignment describes how the image should be aligned if it must be cropped or if using repeat fill mode.
+	HorizontalAlignment string `json:"horizontalAlignment,omitempty"`
+
+	// VerticalAlignment describes how the image should be aligned if it must be cropped or if using repeat fill mode.
+	VerticalAlignment string `json:"verticalAlignment,omitempty"`
+}
+
+// ImageFillMode constants
+const (
+	ImageFillModeCover              string = "cover"
+	ImageFillModeRepeatHorizontally string = "repeatHorizontally"
+	ImageFillModeRepeatVertically   string = "repeatVertically"
+	ImageFillModeRepeat             string = "repeat"
+)
 
 // TargetElement represents an entry for Action.ToggleVisibility's
 // targetElements property.
@@ -3143,6 +3170,10 @@ func (c *Container) AddSelectAction(action interface{}) error {
 	}
 
 	return nil
+}
+
+func (c *Container) AddBackgroundImage(url string) {
+	c.BackgroundImage = &BackgroundImage{URL: url}
 }
 
 // AddContainer adds the given Container Element to the collection of Element
